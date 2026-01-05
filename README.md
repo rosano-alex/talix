@@ -1,39 +1,48 @@
 
-# Quanta 
+# Quanta
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/built_with-TypeScript-blue)]()
-[![Reactive Runtime](https://img.shields.io/badge/runtime-reactive-purple)]()
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
+**Quanta** is a minimal, high‑performance **fine‑grained reactive runtime** built around signals, computed values, and deterministic scheduling.
 
-**Quanta** is a high‑performance reactive runtime for building deterministic state graphs in JavaScript and TypeScript.
+It is designed as a **framework‑agnostic reactive engine** that can power UI frameworks, state managers, and reactive data pipelines.
 
-It provides a minimal set of primitives for constructing reactive systems with predictable execution, explicit dependency tracking, and efficient propagation.
+Quanta combines ideas from:
 
-Quanta is designed for:
+- Solid signals
+- MobX derivations
+- Angular Signals
+- React scheduler priorities
+
+…but implements them in a **small deterministic runtime with priority lanes**.
+
+---
+
+# Why Quanta
+
+Most reactive systems solve **state propagation**.
+
+Quanta solves **state propagation + deterministic scheduling**.
+
+This makes it useful for:
 
 • UI frameworks  
-• state management  
-• reactive dataflow systems  
-• concurrent updates  
-• cross‑runtime synchronization  
-
-The runtime is framework agnostic and includes optional React integration.
+• reactive state managers  
+• data pipelines  
+• real‑time systems  
+• highly predictable rendering engines  
 
 ---
 
-# Architecture Overview
+# Core Features
 
-**Propagation flow**
-
-1. A PulseNode changes
-2. Dependent nodes are marked dirty
-3. Scheduler performs topological ordering
-4. Computed nodes recalculate lazily
-5. Effects execute after graph stabilization
+• Fine‑grained reactivity  
+• Signals for mutable state  
+• Lazy computed values  
+• Reactive effects  
+• Deterministic scheduler with priority lanes  
+• Very small runtime footprint  
+• Framework‑agnostic design  
 
 ---
-
 
 # Installation
 
@@ -52,256 +61,343 @@ yarn add quanta
 # Quick Example
 
 ```ts
-import { PulseNode, ComputedNode, EffectNode } from "quanta"
+import { signal, computed, effect } from "quanta"
 
-const count = new PulseNode(0)
+const count = signal(0)
 
-const doubled = new ComputedNode(() => {
-  return count.get() * 2
-})
+const doubled = computed(() => count.get() * 2)
 
-new EffectNode(() => {
-  console.log("value:", doubled.get())
+effect(() => {
+  console.log("count:", count.get())
+  console.log("double:", doubled.get())
 })
 
 count.set(1)
-count.set(2)
 ```
 
-Output
+Output:
 
 ```
-value: 0
-value: 2
-value: 4
+count: 1
+double: 2
 ```
 
 ---
 
-# Core Primitives
+# Core Concepts
 
-## PulseNode
+## Signals
 
-Mutable reactive value.
+Signals represent **reactive mutable state**.
 
 ```ts
-const count = new PulseNode(0)
+const count = signal(0)
 
 count.get()
 count.set(1)
 ```
 
-Responsibilities:
-
-• source of updates  
-• dependency tracking  
-• change propagation  
+Reading a signal automatically tracks dependencies.
 
 ---
 
-## ComputedNode
+## Computed Values
 
-Memoized derived state.
+Computed values derive state from signals.
 
 ```ts
-const total = new ComputedNode(() => {
-  return price.get() * quantity.get()
-})
+const total = computed(() => price.get() * qty.get())
 ```
 
-Features:
+Properties:
 
 • lazy evaluation  
-• cached results  
 • automatic dependency tracking  
+• cached until dependencies change  
 
 ---
 
-## EffectNode
+## Effects
 
-Side effect triggered by reactive changes.
+Effects execute side effects when dependencies change.
 
 ```ts
-new EffectNode(() => {
-  console.log("state changed")
+effect(() => {
+  console.log(count.get())
 })
 ```
 
-Typical uses:
+---
 
-• UI updates  
-• logging  
-• network requests  
-• analytics  
+# Architecture Overview
+
+Quanta builds a **reactive dependency graph**.
+
+```
+        Signal
+          │
+          │
+      Computed
+          │
+          │
+        Effect
+          │
+          │
+      Scheduler
+```
+
+When a signal changes:
+
+```
+Signal.set()
+    ↓
+mark observers
+    ↓
+schedule effects
+    ↓
+scheduler flush
+    ↓
+effects execute
+```
+
+Only the **necessary parts of the graph update**.
 
 ---
 
-# Scheduler
+# Internal Runtime Architecture
 
-Quanta uses a **topologically ordered scheduler**.
+Quanta's runtime is composed of a small set of primitives.
 
-Propagation process:
+## Reactive Nodes
+
+Three node types form the dependency graph:
+
+| Node Type | Purpose |
+|-----------|--------|
+| SignalNode | mutable state |
+| ComputedNode | derived values |
+| EffectNode | side effects |
+
+Dependency tracking occurs automatically during execution.
+
+Example:
 
 ```
-Pulse change
-     ↓
-Mark dependents dirty
-     ↓
-Queue nodes
-     ↓
-Topological execution
-     ↓
-Effects flush
+SignalNode → ComputedNode → EffectNode
 ```
-
-Design goals:
-
-• deterministic execution  
-• minimal recomputation  
-• batching of updates  
 
 ---
 
-# Scopes
+## Dependency Tracking
 
-Scopes manage lifecycle and ownership.
+Dependencies are captured using an active observer context.
+
+```
+activeObserver
+```
+
+When a signal is read during computation:
+
+```
+signal.get()
+   ↓
+register activeObserver
+```
+
+This forms the reactive graph dynamically.
+
+---
+
+## Scheduler
+
+Quanta uses a **deterministic scheduler with priority lanes**.
+
+```
+SYNC
+USER
+TRANSITION
+BACKGROUND
+```
+
+Flush order:
+
+```
+SYNC
+  ↓
+USER
+  ↓
+TRANSITION
+  ↓
+BACKGROUND
+```
+
+This guarantees stable execution and enables advanced scheduling strategies.
+
+---
+
+# Reactive Graph Example
+
+```
+      count
+        │
+        ▼
+     doubled
+        │
+        ▼
+     logger
+```
+
+When `count` changes:
+
+```
+count.set()
+   ↓
+invalidate doubled
+   ↓
+schedule logger
+   ↓
+run logger
+```
+
+Only the affected nodes update.
+
+---
+
+# Advanced Examples
+
+## Derived State Graph
 
 ```ts
-import { createScope } from "quanta"
+const price = signal(10)
+const qty = signal(2)
 
-const scope = createScope()
+const subtotal = computed(() => price.get() * qty.get())
 
-scope.run(() => {
-  new EffectNode(() => console.log("running"))
+const tax = computed(() => subtotal.get() * 0.07)
+
+const total = computed(() => subtotal.get() + tax.get())
+
+effect(() => {
+  console.log("total =", total.get())
 })
-
-scope.dispose()
 ```
 
-Disposing a scope automatically cleans up all owned effects.
+Graph:
+
+```
+price ─┐
+       ├─> subtotal ─> tax ─> total ─> effect
+qty  ──┘
+```
 
 ---
 
-# Lanes (Concurrency)
-
-Lanes enable prioritized updates.
-
-Examples:
-
-• synchronous user input  
-• transitions  
-• background updates  
+## Multiple Effects
 
 ```ts
-import { forkLane } from "quanta"
+effect(() => console.log("count:", count.get()))
+effect(() => console.log("double:", doubled.get()))
+```
 
-const transitionLane = forkLane("transition")
+Each effect independently subscribes to dependencies.
+
+---
+
+## Reactive Data Pipeline
+
+Quanta can also power data flows.
+
+```ts
+const raw = signal(10)
+
+const normalized = computed(() => raw.get() / 100)
+
+const percent = computed(() => normalized.get() * 100)
+
+effect(() => {
+  console.log(percent.get() + "%")
+})
 ```
 
 ---
 
-# React Integration
+# Benchmark Expectations
 
-Optional React hooks.
+Approximate performance expectations for common reactive workloads.
 
-```tsx
-import { PulseNode } from "quanta"
-import { usepulse } from "quanta/react-hooks"
+| Library | Relative Performance |
+|-------|----------------------|
+| Solid Signals | ★★★★★ |
+| Quanta | ★★★★☆ |
+| Angular Signals | ★★★★ |
+| MobX | ★★★ |
+| RxJS | ★★ |
 
-const count = new PulseNode(0)
+Quanta achieves competitive performance because it uses:
 
-function Counter() {
-  const value = usepulse(count)
+• array based observer lists  
+• lazy computed evaluation  
+• minimal runtime allocations  
+• deterministic scheduler  
 
-  return (
-    <button onClick={() => count.set(value + 1)}>
-      {value}
-    </button>
-  )
-}
-```
-
-Components automatically re-render when reactive dependencies change.
+Actual performance will vary by workload.
 
 ---
 
-# Comparison
+# What Makes Quanta Different
 
-| Feature | Quanta | Angular Signals | MobX | SolidJS |
-|------|------|------|------|------|
-| Fine-grained reactivity | ✓ | ✓ | ✓ | ✓ |
-| Lazy computed values | ✓ | ✓ | ✓ | ✓ |
-| Deterministic scheduler | ✓ | partial | partial | ✓ |
-| Framework independent | ✓ | ✗ | ✓ | ✗ |
-| Concurrent lanes | ✓ | ✗ | ✗ | partial |
-| Cross-runtime sync | ✓ | ✗ | ✗ | ✗ |
-| Minimal core primitives | ✓ | ✓ | ✗ | ✓ |
+Most signal systems focus purely on **dependency tracking**.
 
-Quanta focuses on **deterministic reactive graphs and runtime portability.**
-
----
-
-
-
-# Project Structure
+Quanta integrates:
 
 ```
-src/
-
-pulse.ts
-computed.ts
-effect.ts
-scheduler.ts
-context.ts
-scope.ts
-lane.ts
-bridge.ts
-react-hooks.ts
+Fine‑grained signals
+        +
+Deterministic scheduler
 ```
 
----
+This allows reactive work to be **prioritized and coordinated**.
 
-# Cross Runtime Bridge
+Potential use cases:
 
-Quanta supports syncing reactive graphs across runtimes.
-
-Supported transports:
-
-• Web Workers  
-• MessagePort  
-• BroadcastChannel  
-• iframes  
-• custom network bridges  
-
-This enables reactive state sharing between threads or processes.
+• UI frameworks  
+• concurrent rendering engines  
+• real‑time dashboards  
+• reactive simulation systems  
 
 ---
 
-# Design Principles
+# Design Goals
 
-Quanta prioritizes:
+Quanta is built with several guiding principles.
 
-• deterministic execution  
-• explicit dependency graphs  
-• minimal runtime overhead  
-• framework independence  
-• composable primitives  
+### Simplicity
+
+The runtime is intentionally small and understandable.
+
+### Determinism
+
+Reactive updates always occur in a predictable order.
+
+### Performance
+
+Fine‑grained dependency tracking ensures minimal work.
+
+### Composability
+
+Signals, computed values, and effects can be combined freely.
 
 ---
 
-# Contributing
+# Project Status
 
-Contributions are welcome.
+Quanta is currently **early stage**.
 
-Areas of interest:
-
-• performance improvements  
-• devtools  
-• additional framework integrations  
-• documentation and examples  
+The architecture is stable but internal optimizations will continue to evolve.
 
 ---
 
 # License
 
 MIT
+
