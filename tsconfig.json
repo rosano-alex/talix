@@ -6,10 +6,10 @@
     ],
     "rootDir": ".",
     "paths": {
-      "@ICTUS": [
+      "@ROSA": [
         "./src/index"
       ],
-      "@ICTUS/react": [
+      "@ROSA/react": [
         "./src/react/index"
       ]
     },

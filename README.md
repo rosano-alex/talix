@@ -1,10 +1,10 @@
-<p style="text-align: Left;"><img src="img/ictus.png" width="450"></p>
+<p style="text-align: Left;"><img src="img/ROSA.JPG" width="490"></p>
 
  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/facebook/react/blob/main/LICENSE)
 
-**ICTUS** is a minimal, high‑performance fine‑grained reactive runtime built around signals, computed values, and deterministic scheduling. It is designed as a framework‑agnostic reactive engine that can power UI frameworks, state managers, and reactive data pipelines.
+**ROSA** is a minimal, high‑performance fine‑grained reactive runtime built around signals, computed values, and deterministic scheduling. It is designed as a framework‑agnostic reactive engine that can power UI frameworks, state managers, and reactive data pipelines.
 
-ICTUS combines ideas from Solid signals, MobX, Angular Signals, and React scheduler priorities. ICTUS uses a small deterministic runtime with priority lanes.
+ROSA combines ideas from Solid signals, MobX, Angular Signals, and React scheduler priorities. ROSA uses a small deterministic runtime with priority lanes.
 
 ### High Level Principals
 
@@ -14,7 +14,7 @@ ICTUS combines ideas from Solid signals, MobX, Angular Signals, and React schedu
 - **Composability** - Signals, computed values, and effects can be combined freely.
 
 Most signal systems focus purely on **dependency tracking**.
-ICTUS achieves competitive performance because it uses:
+ROSA achieves competitive performance because it uses:
 
 • Array based observer lists  
 • Lazy computed evaluation  
@@ -46,9 +46,9 @@ ICTUS achieves competitive performance because it uses:
 # Installation
 
 ```bash
-npm install ICTUS
+npm install ROSA
 # or
-yarn add ICTUS
+yarn add ROSA
 ```
 
 
@@ -58,7 +58,7 @@ yarn add ICTUS
 
 ### Basic Idea
 ```ts
-import { signal, computed, effect } from "ICTUS";
+import { signal, computed, effect } from "ROSA";
 const count = pulse(0);
 const doubled = computed(() => count.get() * 2);
 
@@ -112,14 +112,14 @@ effect(() => {
 
 # Architecture Overview
 
-ICTUS builds a **reactive dependency graph**. Only the necessary parts of the graph update.
+ROSA builds a **reactive dependency graph**. Only the necessary parts of the graph update.
 
 <p style="text-align: Left;"><img src="img/flow.png" width="430"></p>
 
 <br>
 
 # Reactive Nodes (Internal Architecture)
-ICTUS's runtime is composed of a small set of primitives.
+ROSA's runtime is composed of a small set of primitives.
 
 Three node types form the dependency graph:
 
@@ -161,7 +161,7 @@ This forms the reactive graph dynamically.
 
 ## Scheduler
 
-ICTUS uses a **deterministic scheduler with priority lanes**.
+ROSA uses a **deterministic scheduler with priority lanes**.
 
 ```
 SYNC
@@ -236,7 +236,7 @@ Each effect independently subscribes to dependencies.
 
 ## Reactive Data Pipeline
 
-ICTUS can also power data flows.
+ROSA can also power data flows.
 
 ```ts
 const raw = pulse(10);
@@ -253,7 +253,7 @@ effect(() => {
 
 # Project Status
 
-ICTUS is currently **early stage**.
+ROSA is currently **early stage**.
 
 The architecture is stable but internal optimizations will continue to evolve.
 

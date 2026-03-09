@@ -1,14 +1,14 @@
 # React Hooks
 
-ICTUS provides a set of React hooks that bridge the reactive graph with React's component model. These hooks let you subscribe to pulses, create computed values, run reactive side-effects, and use concurrent lanes — all within standard React components.
+ROSA provides a set of React hooks that bridge the reactive graph with React's component model. These hooks let you subscribe to pulses, create computed values, run reactive side-effects, and use concurrent lanes — all within standard React components.
 
 ## `usePulse<T>(pulse: PulseNode<T>): T`
 
 Subscribes a component to a PulseNode and returns its current value. The component re-renders automatically whenever the pulse changes.
 
 ```tsx
-import { PulseNode } from "ICTUS";
-import { usePulse } from "ICTUS";
+import { PulseNode } from "ROSA";
+import { usePulse } from "ROSA";
 
 const count = new PulseNode(0);
 
@@ -30,7 +30,7 @@ Under the hood, `usePulse` creates an `EffectNode` that calls `pulse.get()` to e
 Creates a memoized derived value inside a component and re-renders whenever that value changes. Dependencies are tracked automaticaly — no dependency array needed.
 
 ```tsx
-import { PulseNode, useComputed } from "ICTUS";
+import { PulseNode, useComputed } from "ROSA";
 
 const price = new PulseNode(29.99);
 const quantity = new PulseNode(3);
@@ -50,7 +50,7 @@ The `ComputedNode` is created once (via `useMemo`) and a bridge `EffectNode` dri
 Executes a render function inside a reactive tracking context so that any pulses accessed during rendering automatically trigger re-renders.
 
 ```tsx
-import { useObserver } from "ICTUS";
+import { useObserver } from "ROSA";
 
 const name = new PulseNode("World");
 const greeting = new PulseNode("Hello");
@@ -70,10 +70,10 @@ This is the low-level primitive for fine-grained reactive rendering. Use it when
 
 ## `useEffectPulse(fn: () => void): void`
 
-Runs a reactive side-effect inside a component that re-executes whenever its pulse dependencies change. This is the ICTUS equivelent of React's `useEffect`, but with automatic dependency tracking.
+Runs a reactive side-effect inside a component that re-executes whenever its pulse dependencies change. This is the ROSA equivelent of React's `useEffect`, but with automatic dependency tracking.
 
 ```tsx
-import { PulseNode, useEffectPulse } from "ICTUS";
+import { PulseNode, useEffectPulse } from "ROSA";
 
 const count = new PulseNode(0);
 
@@ -100,7 +100,7 @@ Key differences from `useEffect`:
 Creates a `Scope` tied to the component's lifecycle. The scope is created on mount and disposed on unmount, automatically cleaning up any reactive nodes created within it.
 
 ```tsx
-import { useScope, EffectNode, ERROR } from "ICTUS";
+import { useScope, EffectNode, ERROR } from "ROSA";
 
 function Dashboard() {
   const scope = useScope();
@@ -128,20 +128,20 @@ function Dashboard() {
 }
 ```
 
-## `useIctusTransition(): [boolean, (fn: () => void) => void]`
+## `useRosaTransition(): [boolean, (fn: () => void) => void]`
 
-ICTUS's equivalent of React's `useTransition`, implemented with concurrent lanes. Returns an `[isPending, startTransition]` tuple.
+ROSA's equivalent of React's `useTransition`, implemented with concurrent lanes. Returns an `[isPending, startTransition]` tuple.
 
 Pulse writes inside `startTransition()` are buffered in a concurrent lane and committed asynchronosly after the callback completes.
 
 ```tsx
-import { PulseNode, useIctusTransition, usePulse } from "ICTUS";
+import { PulseNode, useRosaTransition, usePulse } from "ROSA";
 
 const searchQuery = new PulseNode("");
 const searchResults = new PulseNode<string[]>([]);
 
 function SearchPage() {
-  const [isPending, startTransition] = useIctusTransition();
+  const [isPending, startTransition] = useRosaTransition();
   const query = usePulse(searchQuery);
   const results = usePulse(searchResults);
 
@@ -178,7 +178,7 @@ Creates a concurrent lane tied to the component's lifecycle. The lane is created
 Use this when you need fine-grained control over speculative state that outlasts a single `startTransition` call.
 
 ```tsx
-import { useLane, usePulse, PulseNode } from "ICTUS";
+import { useLane, usePulse, PulseNode } from "ROSA";
 
 const draft = new PulseNode("");
 
@@ -218,7 +218,7 @@ import {
   useEffectPulse,
   useScope,
   ERROR,
-} from "ICTUS";
+} from "ROSA";
 
 // Global reactive state
 const todos = new PulseNode<{ id: number; text: string; done: boolean }[]>([]);
