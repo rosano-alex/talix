@@ -13,6 +13,22 @@ Quanta combines ideas from Solid signals, MobX, Angular Signals, and React sched
 - **Performance** - Fine‑grained dependency tracking ensures minimal work.
 - **Composability** - Signals, computed values, and effects can be combined freely.
 
+Most signal systems focus purely on **dependency tracking**.
+Quanta achieves competitive performance because it uses:
+
+• Array based observer lists  
+• Lazy computed evaluation  
+• Minimal runtime allocations  
+• Deterministic scheduler
+
+### Potential use cases:
+
+• UI frameworks  
+• concurrent rendering engines  
+• real‑time dashboards  
+• reactive simulation systems
+
+
 ---
 
 # Core Features
