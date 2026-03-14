@@ -4,7 +4,7 @@
 Computed values derive state from signals.
 
 ```ts
-import { signal, computed } from "quanta"
+import { signal, computed } from "ICTUS"
 
 const price = signal(10)
 const quantity = signal(2)

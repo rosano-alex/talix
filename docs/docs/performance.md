@@ -1,7 +1,7 @@
 
 # Performance
 
-Quanta includes several optimizations:
+ICTUS includes several optimizations:
 
 • Lazy computed evaluation  
 • Batched scheduler  

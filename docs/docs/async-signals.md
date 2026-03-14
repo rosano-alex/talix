@@ -4,7 +4,7 @@
 Async signals help manage asynchronous state.
 
 ```ts
-import { asyncSignal } from "quanta"
+import { asyncSignal } from "ICTUS"
 
 const user = asyncSignal(async () => {
   const res = await fetch("/api/user")

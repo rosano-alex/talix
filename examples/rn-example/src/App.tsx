@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet } from 'react-native';
-import { multiply } from 'rn-quanta';
+import { multiply } from 'rn-ICTUS';
 
 const result = multiply(3, 7);
 

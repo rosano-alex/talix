@@ -4,7 +4,7 @@
 Effects run whenever dependencies change.
 
 ```ts
-import { signal, effect } from "quanta"
+import { signal, effect } from "ICTUS"
 
 const count = signal(0)
 

@@ -1,7 +1,7 @@
 
 # Devtools
 
-Quanta provides developer tooling scaffolds.
+ICTUS provides developer tooling scaffolds.
 
 ## Signal Graph Debugger
 

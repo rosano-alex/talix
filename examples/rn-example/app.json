@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "RnQuanta Example",
-    "slug": "rn-quanta-example",
+    "name": "RnICTUS Example",
+    "slug": "rn-ICTUS-example",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,7 +13,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "rnquanta.example"
+      "bundleIdentifier": "rnICTUS.example"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +22,7 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "package": "rnquanta.example"
+      "package": "rnICTUS.example"
     },
     "web": {
       "favicon": "./assets/favicon.png"

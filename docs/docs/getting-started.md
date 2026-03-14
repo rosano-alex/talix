@@ -4,7 +4,7 @@
 ## Creating a Signal
 
 ```ts
-import { signal } from "quanta"
+import { signal } from "ICTUS"
 
 const count = signal(0)
 ```

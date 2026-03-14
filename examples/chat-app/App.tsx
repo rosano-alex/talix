@@ -1,8 +1,8 @@
 
 import React from "react";
 import { View, Text, Button, TextInput, ScrollView } from "react-native";
-import { signal } from "quanta";
-import { useSignal } from "quanta/react";
+import { signal } from "ICTUS";
+import { useSignal } from "ICTUS/react";
 
 const messages = signal<{ text: string, time: number }[]>([]);
 const input = signal("");

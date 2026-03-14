@@ -1,9 +1,9 @@
 
-# Quanta Documentation
+# ICTUS Documentation
 
-Quanta is a **fine‑grained reactive state management system** for React and React Native.
+ICTUS is a **fine‑grained reactive state management system** for React and React Native.
 
-Instead of updating component trees, Quanta uses a **signal dependency graph** so that
+Instead of updating component trees, ICTUS uses a **signal dependency graph** so that
 only the exact dependencies update when state changes.
 
 This documentation includes:
@@ -24,7 +24,7 @@ This documentation includes:
 # Installation
 
 ```bash
-npm install quanta
+npm install ICTUS
 ```
 
 React Native:

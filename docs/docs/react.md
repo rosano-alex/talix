@@ -1,11 +1,11 @@
 
 # React Integration
 
-Quanta integrates with React using `useSignal`.
+ICTUS integrates with React using `useSignal`.
 
 ```tsx
-import { useSignal } from "quanta/react"
-import { signal } from "quanta"
+import { useSignal } from "ICTUS/react"
+import { signal } from "ICTUS"
 
 const count = signal(0)
 

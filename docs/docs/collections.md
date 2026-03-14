@@ -4,7 +4,7 @@
 ## Reactive Array
 
 ```ts
-import { reactiveArray } from "quanta"
+import { reactiveArray } from "ICTUS"
 
 const todos = reactiveArray()
 
@@ -15,7 +15,7 @@ todos.push("Walk dog")
 ## Reactive Map
 
 ```ts
-import { reactiveMap } from "quanta"
+import { reactiveMap } from "ICTUS"
 
 const users = reactiveMap()
 
@@ -25,7 +25,7 @@ users.set("1", {name:"Alex"})
 ## Reactive Set
 
 ```ts
-import { reactiveSet } from "quanta"
+import { reactiveSet } from "ICTUS"
 
 const selected = reactiveSet()
 

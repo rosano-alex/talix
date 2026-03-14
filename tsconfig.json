@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
+    "isolatedModules": true,
+    "types": [
+      "vitest/globals"
+    ],
     "rootDir": ".",
     "paths": {
-      "@quanta": [
+      "@ICTUS": [
         "./src/index"
       ],
-      "@quanta/react": [
+      "@ICTUS/react": [
         "./src/react/index"
       ]
     },
