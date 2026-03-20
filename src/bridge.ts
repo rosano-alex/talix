@@ -2,7 +2,7 @@
 import { PulseNode } from "./pulse";
 import { ComputedNode } from "./computed";
 import { EffectNode } from "./effect";
-import type { Node } from "./node";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 // #################################
 // Message protocol
@@ -728,9 +728,9 @@ export class GraphBridge {
  * @param setup - Function called with the bridge once the port is received.
  */
 export function createWorkerBridge(setup: (bridge: GraphBridge) => void): void {
-  const ctx = globalThis as DedicatedWorkerGlobalScope;
+  const theTHIS = globalThis as unknown as DedicatedWorkerGlobalScope;
 
-  ctx.onmessage = (event: MessageEvent) => {
+  theTHIS.onmessage = (event: MessageEvent) => {
     if (event.data && event.data.port instanceof MessagePort) {
       const bridge = new GraphBridge(event.data.port);
       setup(bridge);
