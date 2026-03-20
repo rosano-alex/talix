@@ -387,10 +387,22 @@ export class GraphBridge {
     });
 
     // Create an effect that watches for changes and sends updates.
+    // EffectNode runs fn() immediately on construction to register as an
+    // observer, but we must NOT send an "update" on that first run — the
+    // "expose" message above already carries the initial value.
+    let firstRun = true;
     const effect = new EffectNode(() => {
       const currentValue = isSignal
         ? (node as PulseNode<any>).get()
         : (node as ComputedNode<any>).get();
+
+      // Suppress the initial run: its only job is to subscribe this effect
+      // to the node's observer list. Sending an "update" here would duplicate
+      // the "expose" message that was already sent with the same value.
+      if (firstRun) {
+        firstRun = false;
+        return;
+      }
 
       const currentVersion = isSignal
         ? (node as PulseNode<any>).version

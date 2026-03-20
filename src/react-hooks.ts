@@ -3,7 +3,7 @@ import { PulseNode } from "./pulse";
 import * as React from "react";
 import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { EffectNode } from "./effect";
-import { setObserver } from "./context";
+import { activeObserver, setObserver } from "./context";
 import { Scope, createScope, ERROR } from "./scope";
 import { forkLane, type Priority, Lane } from "./lane";
 import type { Node } from "./node";
@@ -173,9 +173,15 @@ export function useObserver(
   const effectRef = useRef<EffectNode | null>(null);
 
   if (!effectRef.current) {
+    // Suppress the EffectNode's initial synchronous run so it does not call
+    // forceUpdate() during the render phase. React forbids state updates
+    // during render; the initial subscription is registered below via
+    // setObserver(), so the immediate run is not needed for tracking.
+    let mounted = false;
     effectRef.current = new EffectNode(() => {
-      forceUpdate((v) => v + 1);
+      if (mounted) forceUpdate((v) => v + 1);
     });
+    mounted = true;
   }
 
   useEffect(() => {
@@ -189,6 +195,9 @@ export function useObserver(
 
   const effect = effectRef.current as Node;
 
+  // Save the previous observer so nested useObserver calls restore correctly
+  // instead of blindly setting null and orphaning the outer tracking context.
+  const prevObserver = activeObserver;
   setObserver(effect);
 
   let result: React.ReactElement | null = null;
@@ -196,7 +205,7 @@ export function useObserver(
   try {
     result = render();
   } finally {
-    setObserver(null as any);
+    setObserver(prevObserver);
   }
 
   return result;

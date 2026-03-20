@@ -1,5 +1,4 @@
 import { activeObserver, setObserver } from "./context";
-import { epoch } from "./clock";
 import { NodeFlags, type Node } from "./node";
 import { LaneTypes } from "./lanetypes";
 
@@ -10,12 +9,6 @@ export class ComputedNode<T> implements Node {
   lane = LaneTypes.USER;
   flags = NodeFlags.DIRTY;
 
-  deps: any[] = new Array(8);
-  versions: number[] = new Array(8);
-  depCount = 0;
-
-  lastEpoch = -1;
-
   constructor(fn: () => T) {
     this.compute = fn;
   }
@@ -23,7 +16,11 @@ export class ComputedNode<T> implements Node {
   observers: Node[] = [];
 
   get(): T {
-    if (this.flags & NodeFlags.DIRTY || this.lastEpoch !== epoch) {
+    // Only recompute when explicitly marked dirty via mark().
+    // The epoch-based fallback was removed: it caused every computed to
+    // recompute whenever *any* pulse changed (epoch increments globally),
+    // bypassing the fine-grained DIRTY propagation from the dependency graph.
+    if (this.flags & NodeFlags.DIRTY) {
       this.recompute();
     }
 
@@ -46,7 +43,6 @@ export class ComputedNode<T> implements Node {
         if (observer) {
           observer.mark();
         }
-
       }
     }
   }
@@ -59,8 +55,6 @@ export class ComputedNode<T> implements Node {
     const prev = activeObserver;
     setObserver(this);
 
-    this.depCount = 0;
-
     try {
       const v = this.compute();
       this.value = v;
@@ -68,7 +62,6 @@ export class ComputedNode<T> implements Node {
       setObserver(prev);
     }
 
-    this.lastEpoch = epoch;
     this.flags = NodeFlags.CLEAN;
   }
 }

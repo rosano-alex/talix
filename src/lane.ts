@@ -2,7 +2,7 @@ import type { Node } from "./node";
 import { NodeFlags } from "./node";
 import type { PulseNode } from "./pulse";
 import type { ComputedNode } from "./computed";
-import { setObserver } from "./context";
+import { activeObserver, setObserver } from "./context";
 import { Scope, activeScope } from "./scope";
 
 // #################################
@@ -369,15 +369,17 @@ export class Lane {
   private recompute<T>(node: ComputedNode<T>): T {
     setActiveLane(this);
 
-    // Use setObserver to track dependencies, but don't mutate the
-    // node's own state — this is a lane-local computation.
+    // Save and restore the active observer so nested recompute() calls
+    // (e.g. a lane-local computed that reads another computed) don't
+    // clobber the outer context by setting observer to null unconditionally.
+    const prevObserver = activeObserver;
     setObserver(node as unknown as Node);
 
     let value: T;
     try {
       value = (node as any).compute();
     } finally {
-      setObserver(null);
+      setObserver(prevObserver);
       setActiveLane(null);
     }
 

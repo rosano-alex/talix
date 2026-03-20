@@ -1,8 +1,8 @@
-<p style="text-align: Left;"><img src="img/new_logo.png" width="460"></p>
+<p style="text-align: Left;"><img src="img/new_logo.png" width="300"></p>
 
-**HOG** is a minimal, high‑performance fine‑grained reactive runtime built around signals, computed values, and deterministic scheduling. It is designed as a framework‑agnostic reactive engine that can power UI frameworks, state managers, and reactive data pipelines.
+**Zo** is a minimal, high‑performance fine‑grained reactive runtime. What sets it apart is its **deterministic microtask scheduler** — instead of flushing updates synchronously, Zo queues reactive work through a priority-lane pipeline (SYNC → USER → TRANSITION → BACKGROUND) and dispatches it via `queueMicrotask`, much like a service worker processes jobs in the background. This keeps the main thread responsive while guaranteeing a stable, predictable update order.
 
-Zo combines ideas from Solid signals, MobX, Angular Signals, and React scheduler priorities. Zo uses a small deterministic runtime with priority lanes.
+Zo draws from Solid signals, MobX, Angular Signals, and React's scheduler priorities, distilling those ideas into a small, framework‑agnostic reactive engine that can power UI frameworks, state managers, and reactive data pipelines.
 
 ### High Level Principals
 
@@ -10,7 +10,7 @@ Zo combines ideas from Solid signals, MobX, Angular Signals, and React scheduler
 - **Determinism** - Reactive updates always occur in a predictable order.
 - **Performance** - Fine‑grained dependency tracking ensures minimal work.
 - **Composability** - Signals, computed values, and effects can be combined freely.
-kdf
+
 Most signal systems focus purely on **dependency tracking**.
 Zo achieves competitive performance because it uses:
 
@@ -73,10 +73,10 @@ double: 2;
 
 ### Pulse
 
-**Pulse** represents s reactive mutable state. Reading a signal automatically tracks dependencies.
+**Pulse** represents reactive mutable state. Reading a signal automatically tracks dependencies.
 
 ```ts
-const count = pulse](0)
+const count = pulse(0)
 count.get()
 count.set(1)
 ```
@@ -260,4 +260,3 @@ The architecture is stable but internal optimizations will continue to evolve.
 # License
 
 MIT
-==~~====-\========================~~==

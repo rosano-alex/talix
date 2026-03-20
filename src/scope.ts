@@ -444,15 +444,15 @@ export class Scope {
     // 3. Dispose owned nodes.
     for (const node of this.ownedNodes) {
       if ("dispose" in node && typeof node.dispose === "function") {
-        // EffectNode — has dispose()
-        node.dispose();
-      } else if ("flags" in node) {
-        // ComputedNode — mark disposed and clear observers
-        (node as Node).flags |= NodeFlags.DIRTY;
-        (node as unknown as PulseNode<any>).observers.length = 0;
+        // EffectNode — has dispose(); sets DISPOSED flag and stops scheduling.
+        (node as { dispose(): void }).dispose();
       } else if ("observers" in node) {
-        // pulseNode — clear observers
-        node.observers.length = 0;
+        // ComputedNode or PulseNode — clear downstream observer list so the
+        // node stops notifying anything after the scope is torn down.
+        // Do NOT set NodeFlags.DIRTY here: DIRTY means "needs recomputation",
+        // not "disposed". Touching flags risks confusing the scheduler if a
+        // stale reference triggers a flush after disposal.
+        (node as unknown as PulseNode<any>).observers.length = 0;
       }
     }
     this.ownedNodes.clear();
