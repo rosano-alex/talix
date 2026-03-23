@@ -1,7 +1,63 @@
 {
   "name": "lane-x",
   "version": "1.0.4",
-  "dependencies": {
+  "description": "A minimal, high-performance fine-grained reactive runtime with priority-lane scheduling",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "yarn build"
+  },
+  "keywords": [
+    "reactive",
+    "signals",
+    "fine-grained",
+    "state-management",
+    "scheduler",
+    "lanes",
+    "computed",
+    "effects"
+  ],
+  "author": "Alex Rosano",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rosano-alex/lane-x.git"
+  },
+  "homepage": "https://github.com/rosano-alex/lane-x#readme",
+  "bugs": {
+    "url": "https://github.com/rosano-alex/lane-x/issues"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -12,32 +68,8 @@
     "@types/react-dom": "^19.2.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-scripts": "5.0.1",
+    "tsup": "^8.0.0",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "dashboard{": "react-scripts start"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "vitest": "latest"
   }
 }
