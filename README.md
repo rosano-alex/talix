@@ -1,5 +1,5 @@
 # Lane-X
-A minimal, high-performance fine-grained reactive runtime.
+### A minimal, high-performance fine-grained reactive runtime.
 
 Lane-x queues reactive work through a priority-lane pipeline (SYNC → USER → TRANSITION → BACKGROUND) and dispatches it via `queueMicrotask`, keeping the main thread responsive while guaranteeing a stable, predictable update order. It draws from Solid, MobX, Angular, and React's scheduler priorities — distilled into a small, framework-agnostic engine.
 
@@ -161,7 +161,11 @@ exports default function TempConverter() {
 | `useObserver(renderFn)` | Track pulse reads inside a render function |
 | `useEffectPulse(fn)` | Run a reactive side-effect (auto-tracked deps) |
 | `useScope()` | Create a scope tied to the component lifecycle |
+<<<<<<< Updated upstream
 | `useLaneXTranSition()` | Buffer pulse writes in a concurrent lane |
+=======
+| `useLaneXTransition()` | Buffer pulse writes in a concurrent lane |
+>>>>>>> Stashed changes
 | `useLane(priority?)` | Create a concurrent lane tied to the component |
 
 ## Docs
